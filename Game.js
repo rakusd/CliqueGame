@@ -28,7 +28,7 @@ class Game {
     }
 
     initPlayer(gameConfig, playerConfig) {
-        var player;
+        let player;
         switch(playerConfig['type']) {
             case 'human':
                 player = null;
@@ -74,9 +74,9 @@ class Game {
     }
 
     playAutomaticGameOfBots() {
-        var lastMove;
+        let lastMove = null;
         if(this.currentPlayer == PLAYER2) {
-            lastMove = this.player2.decideMove(this.board.copyBoard());
+            lastMove = this.player2.decideMove(lastMove, this.board.copyBoard());
             this.makeMove(lastMove, PLAYER2);
         }
 
@@ -84,7 +84,7 @@ class Game {
             if(!this.canMove()) {
                 break;
             }
-            lastMove = this.player1.decideMove(this.board.copyBoard());
+            lastMove = this.player1.decideMove(lastMove, this.board.copyBoard());
             this.makeMove(lastMove, PLAYER1);
             if(this.checkIfPlayerWon(PLAYER1)) {
                 this.winner = PLAYER1;
@@ -94,7 +94,7 @@ class Game {
             if(!this.canMove()) {
                 break;
             }
-            lastMove = this.player2.decideMove(this.board.copyBoard());
+            lastMove = this.player2.decideMove(lastMove, this.board.copyBoard());
             this.makeMove(lastMove, PLAYER2);
             if(this.checkIfPlayerWon(PLAYER2)) {
                 this.winner = PLAYER2;
