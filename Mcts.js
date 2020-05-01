@@ -72,6 +72,7 @@ class Mcts {
             stats.push({
                 "move": child.move,
                 "wins": child.wins,
+                "lost": child.lost,
                 "visits": child.visits,
                 "perc": child.wins / child.visits
             })
@@ -79,7 +80,7 @@ class Mcts {
         stats.sort((a, b) => (b.perc > a.perc) ? 1 : -1)
         let i = 0;
         for (const s of stats) {
-            console.log(`${++i} - [${s.move[0]}, ${s.move[1]}] wins: ${s.wins}, visits: ${s.visits}, perc: ${roundNum(s.perc, 2)}`);
+            console.log(`${++i} - [${s.move[0]}, ${s.move[1]}] wins: ${s.wins}, lost: ${s.lost}, visits: ${s.visits}, perc: ${roundNum(s.perc, 2)}`);
         }
     }
 
@@ -96,10 +97,10 @@ class Mcts {
     }
 
     _getNode(lastMove) {
-        if (lastMove === null) {
+        if (!lastMove) {
             return new Node(null, null, this._getAllMoves(), false)
-        } else if (this.node === null) {
-            moves = this._getAllMoves();
+        } else if (!this.node) {
+            let moves = this._getAllMoves();
             moves = this._removeMove(moves, lastMove);
             return new Node(lastMove, null, moves, false);
         }
@@ -109,7 +110,7 @@ class Mcts {
                     return child;
                 }
             }
-            moves = this._removeMove(this.node.untriedMoves, lastMove);
+            const moves = this._removeMove(this.node.untriedMoves, lastMove);
             return new Node(lastMove, this.node, moves, false)
         }
 
@@ -131,8 +132,6 @@ class Mcts {
     _selectRandom(arr) {
         return arr[Math.floor(Math.random() * arr.length)];
     }
-
-
 }
 
 class Node {
