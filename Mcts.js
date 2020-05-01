@@ -1,4 +1,4 @@
-const { Board, INVALID, EMPTY, PLAYER1, PLAYER2 } = require('./Board.js');
+const { PLAYER1, PLAYER2 } = require('./Board.js');
 class Mcts {
     constructor(verticesCount, cliqueSize, timeout, botNumber) {
         this.verticesCount = verticesCount;
@@ -50,7 +50,6 @@ class Mcts {
             }
             //backpropagate
             const iWon = playerId === this.botId;
-            //console.log(`iWon: ${iWon}; result: ${result}`);
             while (node !== null) {
                 node.update(result, iWon);
                 node = node.parent;
@@ -60,15 +59,28 @@ class Mcts {
         let foo = (x) => x.wins / x.visits;
         let bestNode = this.node.childNodes.reduce((prev, current) => (foo(prev) > foo(current)) ? prev : current);
         console.log("### percentages ####");
-        let i = 0;
-        for (let child of this.node.childNodes) {
-            console.log(`${++i} - [${child.move[0]}, ${child.move[1]}] wins: ${child.wins}, visits: ${child.visits}, w/v: ${child.wins / child.visits}`);
-        }
+        this._printStats(this.node.childNodes);
         this.node = bestNode;
         bestNode.parent = null;
-        // this.currentBoard.move(bestNode.move, Player.Player0);
 
         return bestNode.move;
+    }
+
+    _printStats(nodes) {
+        const stats = []
+        for (const child of nodes) {
+            stats.push({
+                "move": child.move,
+                "wins": child.wins,
+                "visits": child.visits,
+                "perc": child.wins / child.visits
+            })
+        }
+        stats.sort((a, b) => (b.perc > a.perc) ? 1 : -1)
+        let i = 0;
+        for (const s of stats) {
+            console.log(`${++i} - [${s.move[0]}, ${s.move[1]}] wins: ${s.wins}, visits: ${s.visits}, perc: ${roundNum(s.perc, 2)}`);
+        }
     }
 
     _getAllMoves() {
@@ -120,6 +132,7 @@ class Mcts {
         return arr[Math.floor(Math.random() * arr.length)];
     }
 
+
 }
 
 class Node {
@@ -157,6 +170,12 @@ class Node {
         }
         this.visits += 1;
     }
+}
+
+function roundNum(number, precision) {
+    var power = Math.pow(10, precision);
+
+    return Math.round(number * power) / power;
 }
 
 exports.Mcts = Mcts;
