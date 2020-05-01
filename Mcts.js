@@ -107,11 +107,12 @@ class Mcts {
         else {
             for (const child of this.node.childNodes) {
                 if (this._movesEqual(child.move, lastMove)) {
+                    child.parent = null;
                     return child;
                 }
             }
             const moves = this._removeMove(this.node.untriedMoves, lastMove);
-            return new Node(lastMove, this.node, moves, false)
+            return new Node(lastMove, null, moves, false)
         }
 
     }
