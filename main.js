@@ -1,22 +1,19 @@
-const {Game} = require('./Game.js');
+const { Game } = require('./Game.js');
+const fs = require('fs');
 
-config = {
-    'verticeCount': 6,
-    'cliqueSize': 3,
-    'currentPlayer': 1,
-    'player1': {
-        'type': 'random'
-    },
-    'player2': {
-        'type': 'random'
-    }
-};
+const configPath = process.argv.slice(2)[0];
+let config;
+try {
+    const text = fs.readFileSync(configPath, { encoding: 'utf8' });
+    config = JSON.parse(text)
+} catch (err) {
+    console.error(err);
+    return 1;
+}
 
-var game = new Game();
+const game = new Game();
 game.initGame(config);
 game.playAutomaticGameOfBots();
 
 console.log("Game finished! The winner is player: " + game.winner);
 console.log("He has won in " + game.moveCount + " moves!");
-
-var a = 2;
