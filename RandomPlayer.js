@@ -3,9 +3,9 @@ class RandomPlayer {
 
     }
 
-    decideMove(boardCopy) {
-        var moves = boardCopy.getPossibleMoves();
-        var randomMove = moves[Math.floor(Math.random() * moves.length)];
+    decideMove(_, boardCopy) {
+        let moves = boardCopy.getPossibleMoves();
+        let randomMove = moves[Math.floor(Math.random() * moves.length)];
 
         return randomMove;
     }

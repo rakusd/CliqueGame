@@ -12,7 +12,7 @@ class Board {
     }
 
     getPossibleMoves() {
-        var movesList = [];
+        let movesList = [];
         
         for(let i=0; i < this.verticeCount; i++) {
             for(let j=i+1; j < this.verticeCount; j++) {
@@ -36,7 +36,7 @@ class Board {
     }
 
     copyBoard() {
-        var newBoard = new Board(this.verticeCount);
+        let newBoard = new Board(this.verticeCount);
         
         for(let i=0; i < this.verticeCount; i++) {
             newBoard.fields[i] = this.fields[i].slice();
@@ -46,7 +46,7 @@ class Board {
     }
 
     doesCliqueExist(size, player) {
-        var possibleVertices = [];
+        let possibleVertices = [];
         for(let i=0; i < this.verticeCount; i++) {
             let degree = 0;
             
@@ -65,7 +65,7 @@ class Board {
             return false;
         }
         
-        var verticeSet = new Set();
+        let verticeSet = new Set();
         return this._addToClique(size, player, verticeSet, 0, possibleVertices);
     }
 
