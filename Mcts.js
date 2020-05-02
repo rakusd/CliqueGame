@@ -56,9 +56,8 @@ class Mcts {
             }
         }
 
-        let foo = (x) => x.wins / x.visits;
-        let bestNode = this.node.childNodes.reduce((prev, current) => (foo(prev) > foo(current)) ? prev : current);
-        // this._printStats(this.node.childNodes);
+        let bestNode = this.node.childNodes.reduce((prev, current) => (prev.ucb() > current.ucb()) ? prev : current);
+        //this._printStats(this.node.childNodes);
         this.node = bestNode;
         bestNode.parent = null;
 
@@ -80,6 +79,7 @@ class Mcts {
         stats.sort((a, b) => (b.perc > a.perc) ? 1 : -1)
         let i = 0;
         for (const s of stats) {
+            if (i > 0) break;
             console.log(`${++i} - [${s.move[0]}, ${s.move[1]}] wins: ${s.wins}, lost: ${s.lost}, visits: ${s.visits}, perc: ${roundNum(s.perc, 2)}`);
         }
     }
