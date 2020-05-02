@@ -9,6 +9,7 @@ class Board {
             this.fields[i].fill(EMPTY);
             this.fields[i][i] = INVALID;
         }
+        this.moveCount = 0;
     }
 
     getPossibleMoves() {
@@ -33,6 +34,7 @@ class Board {
 
         this.fields[vertices[0]][vertices[1]] = player;
         this.fields[vertices[1]][vertices[0]] = player;
+        this.moveCount++;
     }
 
     copyBoard() {
@@ -41,6 +43,7 @@ class Board {
         for (let i = 0; i < this.verticesCount; i++) {
             newBoard.fields[i] = this.fields[i].slice();
         }
+        newBoard.moveCount = this.moveCount;
 
         return newBoard;
     }
@@ -76,11 +79,11 @@ class Board {
 
         for (let i = nextVertexIndex; i < possibleVertices.length - (size - verticesSet.size - 1); i++) {
             if (this._canBeAddedToClique(player, verticesSet, possibleVertices[i])) {
-                verticesSet.add(i);
+                verticesSet.add(possibleVertices[i]);
                 if (this._addToClique(size, player, verticesSet, i + 1, possibleVertices)) {
                     return true;
                 }
-                verticesSet.delete(i);
+                verticesSet.delete(possibleVertices[i]);
             }
         }
 
