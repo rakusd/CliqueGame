@@ -1,6 +1,7 @@
 const { Board, INVALID, EMPTY, PLAYER1, PLAYER2 } = require('./Board.js');
 const { RandomPlayer } = require('./RandomPlayer.js');
 const { Mcts } = require('./Mcts.js');
+const { AlphaBetaPlayer } = require('./AlphaBetaPlayer.js');
 
 class Game {
     constructor() {
@@ -22,6 +23,7 @@ class Game {
 
         this.player1 = this.initPlayer(config, config.player1, PLAYER1);
         this.player2 = this.initPlayer(config, config.player2, PLAYER2);
+        this.humanMove = false;
     }
 
     initPlayer(gameConfig, playerConfig, playerId) {
@@ -36,6 +38,7 @@ class Game {
                 break;
 
             case 'alphaBeta':
+                player  = new AlphaBetaPlayer(gameConfig.cliqueSize, playerConfig.depth, playerId, playerConfig.advancedStrategy);
                 break;
 
             case 'monteCarlo':
@@ -46,29 +49,47 @@ class Game {
         return player;
     }
 
+    startHumanComputerGame() {
+        if(this.player1 !== null) {
+            let move = this.player.decideMove(null, this.board.copyBoard());
+            this.makeMove(move, PLAYER1);
+            this.humanId = PLAYER2;
+            this.botId = PLAYER1;
+            this.botPlayer = this.player1;
+        } else {
+            this.humanId = PLAYER1;
+            this.botId = PLAYER2;
+            this.botPlayer = this.player2;
+        }
+        this.humanMove = true;
+    }
+
     makeHumanPlayerMove(move) {
-        // if not currentPlayer == human_player
-        // currentPlayer = enemy
+        if(!this.humanMove) {
+            throw 'Bot is thinking!';
+        }
+        this.humanMove = false; //prevent additional moves to be taken
+        try {
+            this.makeMove(move, this.humanId);
+            if(checkIfPlayerWon(this.humanId)) {
+                this.winner = this.humanId;
+                return winner;
+            }
+        } catch(error) {
+            console.error(error);
+            this.humanMove = true;
+            throw 'Invalid move!';
+        }
 
-        // try {
-        //     this.makeMove(move, human_player);
-        //     if(checkIfPlayerWon(HUMAN_PLAYER)) {
-        //         this.winner = HUMAN_PLAYER;
-        //         return winner;
-        //     }
-        // } catch(error) {
-        //     console.error(error);
-        //     return; //what do u want returned?
-        // }
+        let botMove = this.botPlayer.decideMove(move, this.board.copyBoard());
 
-        // bot_move = this.bot1.decideMove();
+        this.board.markMove(move, this.botMove);
+        if(checkIfPlayerWon(this.botMove)) {
+            this.winner = this.botId;
+            return winner;
+        }
 
-        // this.board.markMove(move, BOT_PLAYER1);
-        // if(checkIfPlayerWon(BOT_PLAYER1)) {
-        //     this.winner = BOT_PLAYER1;
-        //     return;
-        // }
-
+        return botMove;
     }
 
     playAutomaticGameOfBots() {
@@ -111,7 +132,7 @@ class Game {
     }
 
     checkIfPlayerWon(player) {
-        if (this.moveCount < this.minMoves) {
+        if (this.minMoves > (this.moveCount+1)/2 ) {
             return false;
         }
 
