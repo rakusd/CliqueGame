@@ -15,7 +15,7 @@ class Mcts {
     }
 
     decideMove(lastMove, boardCopy) {
-        this.node = this._getNode(lastMove)
+        this.node = this._getNode(lastMove, boardCopy);
         const start = new Date().getTime();
         while (new Date().getTime() - start < this.timeout) {
             let node = this.node;
@@ -58,8 +58,7 @@ class Mcts {
 
         let foo = (x) => x.wins / x.visits;
         let bestNode = this.node.childNodes.reduce((prev, current) => (foo(prev) > foo(current)) ? prev : current);
-        console.log("### percentages ####");
-        this._printStats(this.node.childNodes);
+        // this._printStats(this.node.childNodes);
         this.node = bestNode;
         bestNode.parent = null;
 
@@ -67,6 +66,7 @@ class Mcts {
     }
 
     _printStats(nodes) {
+        console.log("### percentages ####");
         const stats = []
         for (const child of nodes) {
             stats.push({
@@ -96,7 +96,7 @@ class Mcts {
         return movesList;
     }
 
-    _getNode(lastMove) {
+    _getNode(lastMove, boardCopy) {
         if (!lastMove) {
             return new Node(null, null, this._getAllMoves(), false)
         } else if (!this.node) {
@@ -111,8 +111,7 @@ class Mcts {
                     return child;
                 }
             }
-            const moves = this._removeMove(this.node.untriedMoves, lastMove);
-            return new Node(lastMove, null, moves, false)
+            return new Node(lastMove, null, boardCopy.getPossibleMoves(), false)
         }
 
     }
