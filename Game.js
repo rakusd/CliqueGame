@@ -38,11 +38,11 @@ class Game {
                 break;
 
             case 'alphaBeta':
-                player  = new AlphaBetaPlayer(gameConfig.cliqueSize, playerConfig.depth, playerId, playerConfig.advancedStrategy);
+                player = new AlphaBetaPlayer(gameConfig.cliqueSize, playerConfig.depth, playerId, playerConfig.advancedStrategy);
                 break;
 
             case 'monteCarlo':
-                player = new Mcts(gameConfig.verticesCount, gameConfig.cliqueSize, gameConfig.timeout, playerId);
+                player = new Mcts(gameConfig.verticesCount, gameConfig.cliqueSize, playerConfig.timeout, playerId);
                 break;
         }
 
@@ -50,7 +50,7 @@ class Game {
     }
 
     startHumanComputerGame() {
-        if(this.player1 !== null) {
+        if (this.player1 !== null) {
             let move = this.player.decideMove(null, this.board.copyBoard());
             this.makeMove(move, PLAYER1);
             this.humanId = PLAYER2;
@@ -65,17 +65,17 @@ class Game {
     }
 
     makeHumanPlayerMove(move) {
-        if(!this.humanMove) {
+        if (!this.humanMove) {
             throw 'Bot is thinking!';
         }
         this.humanMove = false; //prevent additional moves to be taken
         try {
             this.makeMove(move, this.humanId);
-            if(checkIfPlayerWon(this.humanId)) {
+            if (checkIfPlayerWon(this.humanId)) {
                 this.winner = this.humanId;
                 return winner;
             }
-        } catch(error) {
+        } catch (error) {
             console.error(error);
             this.humanMove = true;
             throw 'Invalid move!';
@@ -84,7 +84,7 @@ class Game {
         let botMove = this.botPlayer.decideMove(move, this.board.copyBoard());
 
         this.board.markMove(move, this.botMove);
-        if(checkIfPlayerWon(this.botMove)) {
+        if (checkIfPlayerWon(this.botMove)) {
             this.winner = this.botId;
             return winner;
         }
@@ -132,7 +132,7 @@ class Game {
     }
 
     checkIfPlayerWon(player) {
-        if (this.minMoves > (this.moveCount+1)/2 ) {
+        if (this.minMoves > (this.moveCount + 1) / 2) {
             return false;
         }
 
