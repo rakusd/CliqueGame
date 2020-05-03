@@ -57,9 +57,21 @@ npm install
 ```
 Run program
 ```bash
-node main.js {PATH_TO_CONFIGURATION_FILE}
+node run.js {PATH_TO_CONFIGURATION_FILE}
 ```
-
+#Bundle into executables
+In order to create executables, you need to install pkg by running
+```bash
+npm install -g pkg
+```
+Then, in the main directory on the project, you need to run
+```bash
+pkg . --out-path exe
+```
+You can run created executable by typing the following command into the console:
+```bash
+./{NAME_OF_THE_EXECUTABLE} {PATH_TO_CONFIGURATION_FILE}
+```
 
 
 
