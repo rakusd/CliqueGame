@@ -59,7 +59,7 @@ Run program
 ```bash
 node run.js {PATH_TO_CONFIGURATION_FILE}
 ```
-#Bundle into executables
+# Bundle into executables
 In order to create executables, you need to install pkg by running
 ```bash
 npm install -g pkg
