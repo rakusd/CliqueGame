@@ -125,6 +125,7 @@ class Game {
         this.board.markMove(move, player);
         this.movesHistory.push(move);
         this.moveCount++;
+        console.log("Player "+ player + " has chosen edge [" + move + "]");
     }
 
     canMove() {

@@ -16,7 +16,11 @@ module.exports = configPath => {
     game.initGame(config);
     let winner = game.playAutomaticGameOfBots();
 
-    console.log("Winner: " + winner);
-    console.log("Game finished! The winner is player: " + game.winner);
-    console.log("He has won in " + game.moveCount + " moves!");
+    if(winner !== null) {
+        console.log("Game finished! The winner is Player " + winner);
+        console.log("He has won in " + game.moveCount + " moves!");
+    } else {
+        console.log("After "+game.moveCount + " moves game has ended as a draw!");
+    }
+    
 }

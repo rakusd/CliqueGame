@@ -32,7 +32,6 @@ class AlphaBeta {
             }
             alpha = Math.max(value, alpha);
         }
-        
         return bestMove;
     }
 
