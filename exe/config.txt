@@ -1,0 +1,13 @@
+{
+    "verticesCount": 10,
+    "cliqueSize": 4,
+    "player1": {
+        "type": "alphaBeta",
+        "depth": 2,
+        "advancedStrategy": true
+    },
+    "player2": {
+        "type": "monteCarlo",
+        "timeout": 1000
+    }
+}
