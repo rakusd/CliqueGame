@@ -11,11 +11,22 @@ try {
     return 1;
 }
 
-
+console.log(config);
 const game = new Game();
-game.initGame(config);
-let winner = game.playAutomaticGameOfBots();
+let p1wins=0,p1draws=0,p1losses=0;
+for(let i = 0; i < 100000; i++) {
+    game.initGame(config);
+    let winner = game.playAutomaticGameOfBots();
+    if(winner === 1) {
+        p1wins++;
+    } else if(winner === 2) {
+        p1losses++;
+    } else {
+        p1draws++;
+        console.log("Game drawn after "+game.moveCount+" moves!");
+        break;
+    }
+    console.log("Winner: " + winner + " in " + game.moveCount + "moves!");
+    console.log("Score: " +p1wins + "-" + p1draws + "-" + p1losses);
+}
 
-console.log("Winner: " + winner);
-console.log("Game finished! The winner is player: " + game.winner);
-console.log("He has won in " + game.moveCount + " moves!");

@@ -64,6 +64,49 @@ class Game {
         this.humanMove = true;
     }
 
+    makeOnlyHumanMove(move) {
+        if (!this.humanMove) {
+            throw "Bot's turn!";
+        }
+        this.humanMove = false;
+        try {
+            this.makeMove(move, this.humanId);
+            if (checkIfPlayerWon(this.humanId)) {
+                this.winner = this.humanId;
+                return 0; //human win
+            }
+        } catch (error) {
+            console.error(error);
+            this.humanMove = true;
+            throw 'Invalid move!';
+        }
+
+        if (!this.canMove()) {
+            return 2; // no moves
+        }
+
+        return 1; // still game
+    }
+
+    makeOnlyBotMove() {
+        if (this.humanMove) {
+            throw "Human's turn"
+        }
+        let botMove = this.botPlayer.decideMove(move, this.board.copyBoard());
+
+        this.board.markMove(move, this.botMove);
+        if (checkIfPlayerWon(this.botMove)) {
+            this.winner = this.botId;
+            return 3; //bot win
+        }
+
+        if (!this.canMove()) {
+            return 2; // no moves
+        }
+
+        return 1; // still game
+    }
+
     makeHumanPlayerMove(move) {
         if (!this.humanMove) {
             throw 'Bot is thinking!';
@@ -122,6 +165,7 @@ class Game {
     }
 
     makeMove(move, player) {
+        process.stdout.write(player === PLAYER1 ? '-' : '+');
         this.board.markMove(move, player);
         this.movesHistory.push(move);
         this.moveCount++;
