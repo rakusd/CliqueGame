@@ -116,7 +116,7 @@ class Game {
         }
 
         this.humanMove = true;
-        this.lastMove = move;
+        this.lastMove = botMove;
         return move; // still game, need to return move for UI
     }
 
@@ -144,7 +144,7 @@ class Game {
 
         this.whichBotMoves = this.whichBotMoves === PLAYER1 ? PLAYER2 : PLAYER1;
         this.lastMove = move;
-        
+
         return move; // still game, need to return move for UI
     }
 
