@@ -50,8 +50,9 @@ class Game {
     }
 
     startHumanComputerGame() {
+        let move = null;
         if (this.player1 !== null) {
-            let move = this.player.decideMove(null, this.board.copyBoard());
+            move = this.player.decideMove(null, this.board.copyBoard());
             this.makeMove(move, PLAYER1);
             this.humanId = PLAYER2;
             this.botId = PLAYER1;
@@ -62,6 +63,7 @@ class Game {
             this.botPlayer = this.player2;
         }
         this.humanMove = true;
+        return move;
     }
 
     makeOnlyHumanMove(move) {
@@ -104,7 +106,7 @@ class Game {
             return 2; // no moves
         }
 
-        return 1; // still game
+        return move; // still game, need to return move for UI
     }
 
     makeHumanPlayerMove(move) {
