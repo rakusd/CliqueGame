@@ -50,8 +50,9 @@ class Game {
     }
 
     startHumanComputerGame() {
+        let move = null;
         if (this.player1 !== null) {
-            let move = this.player.decideMove(null, this.board.copyBoard());
+            move = this.player.decideMove(null, this.board.copyBoard());
             this.makeMove(move, PLAYER1);
             this.humanId = PLAYER2;
             this.botId = PLAYER1;
@@ -62,6 +63,50 @@ class Game {
             this.botPlayer = this.player2;
         }
         this.humanMove = true;
+        return move;
+    }
+
+    makeOnlyHumanMove(move) {
+        if (!this.humanMove) {
+            throw "Bot's turn!";
+        }
+        this.humanMove = false;
+        try {
+            this.makeMove(move, this.humanId);
+            if (checkIfPlayerWon(this.humanId)) {
+                this.winner = this.humanId;
+                return 0; //human win
+            }
+        } catch (error) {
+            console.error(error);
+            this.humanMove = true;
+            throw 'Invalid move!';
+        }
+
+        if (!this.canMove()) {
+            return 2; // no moves
+        }
+
+        return 1; // still game
+    }
+
+    makeOnlyBotMove() {
+        if (this.humanMove) {
+            throw "Human's turn"
+        }
+        let botMove = this.botPlayer.decideMove(move, this.board.copyBoard());
+
+        this.board.markMove(move, this.botMove);
+        if (checkIfPlayerWon(this.botMove)) {
+            this.winner = this.botId;
+            return 3; //bot win
+        }
+
+        if (!this.canMove()) {
+            return 2; // no moves
+        }
+
+        return move; // still game, need to return move for UI
     }
 
     makeHumanPlayerMove(move) {
