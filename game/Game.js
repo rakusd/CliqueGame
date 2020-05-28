@@ -71,7 +71,7 @@ class Game {
         this.humanMove = false; //prevent additional moves to be taken
         try {
             this.makeMove(move, this.humanId);
-            if (checkIfPlayerWon(this.humanId)) {
+            if (this.checkIfPlayerWon(this.humanId)) {
                 this.winner = this.humanId;
                 return winner;
             }
@@ -83,12 +83,12 @@ class Game {
 
         let botMove = this.botPlayer.decideMove(move, this.board.copyBoard());
 
-        this.board.markMove(move, this.botMove);
-        if (checkIfPlayerWon(this.botMove)) {
+        this.makeMove(botMove, this.botId);
+        if (this.checkIfPlayerWon(botMove)) {
             this.winner = this.botId;
             return winner;
         }
-
+        this.humanMove = true;
         return botMove;
     }
 
