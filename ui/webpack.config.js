@@ -8,6 +8,7 @@ const htmlPlugin = new HtmlWebPackPlugin({
 });
 
 module.exports = {
+    devtool: 'inline-source-map',
     entry: ['@babel/polyfill', './src/index.js'],
     output: {
         publicPath: '/'

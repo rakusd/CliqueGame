@@ -30,6 +30,7 @@
     "react": "^16.8.6",
     "react-bootstrap": "^1.0.1",
     "react-cytoscapejs": "^1.2.1",
-    "react-dom": "^16.8.6"
+    "react-dom": "^16.8.6",
+    "threads": "^1.4.1"
   }
 }

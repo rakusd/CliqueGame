@@ -8,7 +8,7 @@ export function Root() {
     verticesCount: 10,
     cliqueSize: 4,
     player1: {
-      type: 'Human',
+      type: 'random',
       depth: 0,
       timeout: 0,
       advancedStrategy: false

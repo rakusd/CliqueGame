@@ -69,7 +69,7 @@ class Game {
         this.lastMove = move;
         return move;
     }
-    
+
     // use this in bot vs human
     makeOnlyHumanMove(move) {
         if (!this.humanMove) {
@@ -77,7 +77,7 @@ class Game {
         }
 
         this.humanMove = false;
-        
+
         try {
             this.makeMove(move, this.humanId);
             if (this.checkIfPlayerWon(this.humanId)) {
@@ -106,7 +106,7 @@ class Game {
         let botMove = this.botPlayer.decideMove(this.lastMove, this.board.copyBoard());
 
         this.board.markMove(botMove, this.botId);
-        if (checkIfPlayerWon(this.botId)) {
+        if (this.checkIfPlayerWon(this.botId)) {
             this.winner = this.botId;
             return this.botId; //bot win
         }
@@ -122,9 +122,13 @@ class Game {
 
     // use for one move in bot vs bot game
     makeMoveInBotVsBot() {
+        if (!this.canMove()) {
+            return 0; // no moves = draw
+        }
+
         let currentBot = null;
 
-        if(this.whichBotMoves === PLAYER1) {
+        if (this.whichBotMoves === PLAYER1) {
             currentBot = this.player1;
         } else {
             currentBot = this.player2;
@@ -132,8 +136,8 @@ class Game {
 
         let botMove = currentBot.decideMove(this.lastMove, this.board.copyBoard());
 
-        this.board.markMove(botMove, this.whichBotMoves);
-        if (checkIfPlayerWon(this.whichBotMoves)) {
+        this.makeMove(botMove, this.whichBotMoves);
+        if (this.checkIfPlayerWon(this.whichBotMoves)) {
             this.winner = this.whichBotMoves;
             return this.whichBotMoves; //bot win
         }
@@ -143,9 +147,9 @@ class Game {
         }
 
         this.whichBotMoves = this.whichBotMoves === PLAYER1 ? PLAYER2 : PLAYER1;
-        this.lastMove = move;
+        this.lastMove = botMove;
 
-        return move; // still game, need to return move for UI
+        return botMove; // still game, need to return move for UI
     }
 
     // used to play whole game, returns winner
@@ -179,7 +183,8 @@ class Game {
     }
 
     makeMove(move, player) {
-        process.stdout.write(player === PLAYER1 ? '-' : '+');
+        // process.stdout.write(player === PLAYER1 ? '-' : '+');
+        console.log(player === PLAYER1 ? '-' : '+')
         this.board.markMove(move, player);
         this.movesHistory.push(move);
         this.moveCount++;
@@ -205,7 +210,7 @@ class Game {
         this.humanMove = false; //prevent additional moves to be taken
         try {
             this.makeMove(move, this.humanId);
-            if (checkIfPlayerWon(this.humanId)) {
+            if (this.checkIfPlayerWon(this.humanId)) {
                 this.winner = this.humanId;
                 return winner;
             }
@@ -218,7 +223,7 @@ class Game {
         let botMove = this.botPlayer.decideMove(move, this.board.copyBoard());
 
         this.board.markMove(move, this.botMove);
-        if (checkIfPlayerWon(this.botMove)) {
+        if (this.checkIfPlayerWon(this.botMove)) {
             this.winner = this.botId;
             return winner;
         }
