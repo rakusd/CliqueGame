@@ -4,7 +4,7 @@ import { createEmptyGraph } from '../../services/graph-creator-service';
 const { Game } = require('../../../../game/Game.js');
 import { Graph } from '../graph/graph';
 import { Col, Button } from 'react-bootstrap';
-const { INVALID, EMPTY, PLAYER1, PLAYER2 } = require('../../../../game/Board.js');
+const { PLAYER1, PLAYER2 } = require('../../../../game/Board.js');
 
 const WIDTH = 600;
 const HEIGHT = 600;
@@ -59,6 +59,7 @@ export function GameBoard({ gameConfig, cancelGame }) {
             }
         }
     }
+    const colorForPlayer = (id) => id === PLAYER1 ? 'red' : 'blue';
 
     const onNodeTap = (event) => {
         const id = Number(event.target.id());
@@ -71,34 +72,40 @@ export function GameBoard({ gameConfig, cancelGame }) {
             if (v1 === id || edgeExist(elements, v1, id)) {
                 return false;
             }
-            const edgeColor = player === PLAYER1 ? 'red' : 'blue';
+            if (!game.canMove()) {
+                alert(`draw`);
+            }
+            const edgeColor = colorForPlayer(player);
             setElements(elements => [...elements, { group: 'edges', data: { source: v1, target: id, edgeColor } }]);
 
-            // game.markMove([v1, id], player1);
-            // if (game.checkIfPlayerWon(player)) {
-            //     alert(`player: {player} won`);
-            //     return;
-            // }
-
+            game.makeOnlyHumanMove([v1, id]);
+            if (game.checkIfPlayerWon(player)) {
+                setTimeout(() => alert(`player: ${player} won`), 1000);
+                return true;
+            }
             player = player === PLAYER1 ? PLAYER2 : PLAYER1;
             v1 = -1;
+
             //bot response
-            // if (gameConfig.player1.type !== 'Human' || gameConfig.player2.type !== 'Human') {
-            //     game.makeMoveInBotVsBot()
-            // }
-            // if (game.checkIfPlayerWon(player)) {
-            //     alert(`player: {player} won`);
-            //     return;
-            // }
+            if (gameConfig.player1.type !== 'human' || gameConfig.player2.type !== 'human') {
+                if (!game.canMove()) {
+                    alert(`draw`);
+                    return false;
+                }
+                const botMove = game.makeOnlyBotMove();
+                game.makeMove(botMove, player);
+                if (game.checkIfPlayerWon(player)) {
+                    setTimeout(() => alert(`player: ${player} won`), 1000);
+                    return true;
+                }
+            }
             return true;
         }
-        return false;
     };
 
     const close = () => cancelGame();
 
     const listOfMoves = (elems) => {
-
         if (elems) {
             const moves = elems.filter(el => el.group === 'edges')
             return (moves.map((m, i) => <div key={i}> from {m.data.source} to: {m.data.target} player: {m.data.edgeColor} </div>))
@@ -112,17 +119,24 @@ export function GameBoard({ gameConfig, cancelGame }) {
         game.initGame(gameConfig);
         setElements(createEmptyGraph(gameConfig.verticesCount, WIDTH / 2, HEIGHT / 2, R));
 
-        if (gameConfig.player1.type !== 'Human' && gameConfig.player2.type !== 'Human') {
+        if (gameConfig.player1.type !== 'human' && gameConfig.player2.type !== 'human') {
             console.log("game bot vs bot");
             setTimeout(async () => await botVsBotGame(game), 10);
-        } else if (gameConfig.player1.type === 'Human' && gameConfig.player2.type === 'Human') {
+
+        } else if (gameConfig.player1.type === 'human' && gameConfig.player2.type === 'human') {
             console.log("game human vs human");
+
         }
-        else if (gameConfig.player1.type === 'Human') {
+        else if (gameConfig.player1.type === 'human') {
             console.log("game human starts");
+            const move = game.startHumanComputerGame();
         }
         else {
             console.log("bot starts");
+            const move = game.startHumanComputerGame();
+            const edgeColor = colorForPlayer(PLAYER1);
+            setElements(elements => [...elements, { group: 'edges', data: { source: move[0], target: move[1], edgeColor } }]);
+            player = PLAYER2;
         }
     }, [gameConfig]);
 

@@ -117,7 +117,7 @@ class Game {
 
         this.humanMove = true;
         this.lastMove = botMove;
-        return move; // still game, need to return move for UI
+        return botMove; // still game, need to return move for UI
     }
 
     // use for one move in bot vs bot game
