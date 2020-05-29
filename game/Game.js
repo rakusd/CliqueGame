@@ -55,7 +55,7 @@ class Game {
     startHumanComputerGame() {
         let move = null;
         if (this.player1 !== null) {
-            move = this.player.decideMove(null, this.board.copyBoard());
+            move = this.player1.decideMove(null, this.board.copyBoard());
             this.makeMove(move, PLAYER1);
             this.humanId = PLAYER2;
             this.botId = PLAYER1;
@@ -108,12 +108,12 @@ class Game {
         this.board.markMove(botMove, this.botId);
         if (this.checkIfPlayerWon(this.botId)) {
             this.winner = this.botId;
-            return this.botId; //bot win
+            //return this.botId; //bot win
         }
 
-        if (!this.canMove()) {
-            return 0; // no moves = draw
-        }
+        // if (!this.canMove()) {
+        //     return 0; // no moves = draw
+        // }
 
         this.humanMove = true;
         this.lastMove = botMove;

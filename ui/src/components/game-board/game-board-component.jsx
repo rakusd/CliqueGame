@@ -93,11 +93,13 @@ export function GameBoard({ gameConfig, cancelGame }) {
                     return false;
                 }
                 const botMove = game.makeOnlyBotMove();
-                game.makeMove(botMove, player);
+                const edgeColor = colorForPlayer(player);
+                setElements(elements => [...elements, { group: 'edges', data: { source: botMove[0], target: botMove[1], edgeColor } }]);
                 if (game.checkIfPlayerWon(player)) {
                     setTimeout(() => alert(`player: ${player} won`), 1000);
                     return true;
                 }
+                player = player === PLAYER1 ? PLAYER2 : PLAYER1;
             }
             return true;
         }
