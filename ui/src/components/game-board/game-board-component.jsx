@@ -14,11 +14,11 @@ let v1 = -1;
 let player = PLAYER1;
 
 
-const promiseMove = (makeMove) => {
+const promiseMove = (game) => {
     return new Promise((resolve, reject) => {
         setTimeout(() => {
-            resolve(makeMove());
-        }, 1);
+            resolve(game.makeMoveInBotVsBot());
+        }, 1000);
     });
 }
 
@@ -42,7 +42,7 @@ export function GameBoard({ gameConfig, cancelGame }) {
 
     const botVsBotGame = async (game) => {
         while (true) {
-            const move = await promiseMove(game.makeMoveInBotVsBot);
+            const move = await promiseMove(game);
             if (typeof (move) === 'number') {
                 if (move === 0) {
                     alert("draw");
