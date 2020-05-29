@@ -24,6 +24,8 @@ class Game {
         this.player1 = this.initPlayer(config, config.player1, PLAYER1);
         this.player2 = this.initPlayer(config, config.player2, PLAYER2);
         this.humanMove = false;
+        this.whichBotMoves = PLAYER1;
+        this.lastMove = null;
     }
 
     initPlayer(gameConfig, playerConfig, playerId) {
@@ -49,6 +51,7 @@ class Game {
         return player;
     }
 
+    // intializes bot vs player game
     startHumanComputerGame() {
         let move = null;
         if (this.player1 !== null) {
@@ -63,62 +66,23 @@ class Game {
             this.botPlayer = this.player2;
         }
         this.humanMove = true;
+        this.lastMove = move;
         return move;
     }
-
+    
+    // use this in bot vs human
     makeOnlyHumanMove(move) {
         if (!this.humanMove) {
             throw "Bot's turn!";
         }
+
         this.humanMove = false;
-        try {
-            this.makeMove(move, this.humanId);
-            if (checkIfPlayerWon(this.humanId)) {
-                this.winner = this.humanId;
-                return 0; //human win
-            }
-        } catch (error) {
-            console.error(error);
-            this.humanMove = true;
-            throw 'Invalid move!';
-        }
-
-        if (!this.canMove()) {
-            return 2; // no moves
-        }
-
-        return 1; // still game
-    }
-
-    makeOnlyBotMove() {
-        if (this.humanMove) {
-            throw "Human's turn"
-        }
-        let botMove = this.botPlayer.decideMove(move, this.board.copyBoard());
-
-        this.board.markMove(move, this.botMove);
-        if (checkIfPlayerWon(this.botMove)) {
-            this.winner = this.botId;
-            return 3; //bot win
-        }
-
-        if (!this.canMove()) {
-            return 2; // no moves
-        }
-
-        return move; // still game, need to return move for UI
-    }
-
-    makeHumanPlayerMove(move) {
-        if (!this.humanMove) {
-            throw 'Bot is thinking!';
-        }
-        this.humanMove = false; //prevent additional moves to be taken
+        
         try {
             this.makeMove(move, this.humanId);
             if (this.checkIfPlayerWon(this.humanId)) {
                 this.winner = this.humanId;
-                return winner;
+                return this.humanId; //human win
             }
         } catch (error) {
             console.error(error);
@@ -126,17 +90,75 @@ class Game {
             throw 'Invalid move!';
         }
 
-        let botMove = this.botPlayer.decideMove(move, this.board.copyBoard());
+        if (!this.canMove()) {
+            return 0; // no moves = draw
+        }
 
+<<<<<<< HEAD:game/Game.js
         this.makeMove(botMove, this.botId);
         if (this.checkIfPlayerWon(botMove)) {
-            this.winner = this.botId;
-            return winner;
-        }
-        this.humanMove = true;
-        return botMove;
+=======
+        this.lastMove = move;
+        return 3; // still game, now call makeOnlyBotMove()
     }
 
+    // use this in bot vs human
+    makeOnlyBotMove() {
+        if (this.humanMove) {
+            throw "Human's turn"
+        }
+        let botMove = this.botPlayer.decideMove(this.lastMove, this.board.copyBoard());
+
+        this.board.markMove(botMove, this.botId);
+        if (checkIfPlayerWon(this.botId)) {
+>>>>>>> origin/master:Game.js
+            this.winner = this.botId;
+            return this.botId; //bot win
+        }
+<<<<<<< HEAD:game/Game.js
+        this.humanMove = true;
+        return botMove;
+=======
+
+        if (!this.canMove()) {
+            return 0; // no moves = draw
+        }
+
+        this.humanMove = true;
+        this.lastMove = botMove;
+        return move; // still game, need to return move for UI
+    }
+
+    // use for one move in bot vs bot game
+    makeMoveInBotVsBot() {
+        let currentBot = null;
+
+        if(this.whichBotMoves === PLAYER1) {
+            currentBot = this.player1;
+        } else {
+            currentBot = this.player2;
+        }
+
+        let botMove = currentBot.decideMove(this.lastMove, this.board.copyBoard());
+
+        this.board.markMove(botMove, this.whichBotMoves);
+        if (checkIfPlayerWon(this.whichBotMoves)) {
+            this.winner = this.whichBotMoves;
+            return this.whichBotMoves; //bot win
+        }
+
+        if (!this.canMove()) {
+            return 0; // no moves = draw
+        }
+
+        this.whichBotMoves = this.whichBotMoves === PLAYER1 ? PLAYER2 : PLAYER1;
+        this.lastMove = move;
+
+        return move; // still game, need to return move for UI
+>>>>>>> origin/master:Game.js
+    }
+
+    // used to play whole game, returns winner
     playAutomaticGameOfBots() {
         let lastMove = null;
 
@@ -162,11 +184,12 @@ class Game {
             }
         }
 
-        // no winner
-        return null;
+        // no winner = draw
+        return 0;
     }
 
     makeMove(move, player) {
+        process.stdout.write(player === PLAYER1 ? '-' : '+');
         this.board.markMove(move, player);
         this.movesHistory.push(move);
         this.moveCount++;
@@ -182,6 +205,35 @@ class Game {
         }
 
         return this.board.doesCliqueExist(this.cliqueSize, player);
+    }
+
+    //=====================================DEPRECATED
+    makeHumanPlayerMove(move) {
+        if (!this.humanMove) {
+            throw 'Bot is thinking!';
+        }
+        this.humanMove = false; //prevent additional moves to be taken
+        try {
+            this.makeMove(move, this.humanId);
+            if (checkIfPlayerWon(this.humanId)) {
+                this.winner = this.humanId;
+                return winner;
+            }
+        } catch (error) {
+            console.error(error);
+            this.humanMove = true;
+            throw 'Invalid move!';
+        }
+
+        let botMove = this.botPlayer.decideMove(move, this.board.copyBoard());
+
+        this.board.markMove(move, this.botMove);
+        if (checkIfPlayerWon(this.botMove)) {
+            this.winner = this.botId;
+            return winner;
+        }
+
+        return botMove;
     }
 }
 
