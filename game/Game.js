@@ -94,10 +94,6 @@ class Game {
             return 0; // no moves = draw
         }
 
-<<<<<<< HEAD:game/Game.js
-        this.makeMove(botMove, this.botId);
-        if (this.checkIfPlayerWon(botMove)) {
-=======
         this.lastMove = move;
         return 3; // still game, now call makeOnlyBotMove()
     }
@@ -111,14 +107,9 @@ class Game {
 
         this.board.markMove(botMove, this.botId);
         if (checkIfPlayerWon(this.botId)) {
->>>>>>> origin/master:Game.js
             this.winner = this.botId;
             return this.botId; //bot win
         }
-<<<<<<< HEAD:game/Game.js
-        this.humanMove = true;
-        return botMove;
-=======
 
         if (!this.canMove()) {
             return 0; // no moves = draw
@@ -155,7 +146,6 @@ class Game {
         this.lastMove = move;
 
         return move; // still game, need to return move for UI
->>>>>>> origin/master:Game.js
     }
 
     // used to play whole game, returns winner
