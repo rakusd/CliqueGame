@@ -83,7 +83,7 @@ export function Config({ initialConfig, onStartGame }) {
                     </Col>
                     <Col>
                         <Form.Group controlId="player1Timeout">
-                            <Form.Label>Stopping Timeout</Form.Label>
+                            <Form.Label>Stopping Timeout (in ms)</Form.Label>
                             <Form.Control type="text" min={0} value={gameConfig.player1.timeout}
                                 disabled={gameConfig?.player1?.type !== 'monteCarlo'}
                                 onChange={event => changePlayerConfig('player1', Number(event.target.value), 'timeout')} />
@@ -123,7 +123,7 @@ export function Config({ initialConfig, onStartGame }) {
                     </Col>
                     <Col>
                         <Form.Group controlId="player2Timeout">
-                            <Form.Label>Stopping Timeout</Form.Label>
+                            <Form.Label>Stopping Timeout (in ms)</Form.Label>
                             <Form.Control type="text" min={0} value={gameConfig.player2.timeout}
                                 disabled={gameConfig?.player2?.type !== 'monteCarlo'}
                                 onChange={event => changePlayerConfig('player2', Number(event.target.value), 'timeout')} />
