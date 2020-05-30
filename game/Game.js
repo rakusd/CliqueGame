@@ -81,6 +81,7 @@ class Game {
         try {
             this.makeMove(move, this.humanId);
             if (this.checkIfPlayerWon(this.humanId)) {
+                this.clique = this.board.clique;
                 this.winner = this.humanId;
                 return this.humanId; //human win
             }
@@ -105,9 +106,10 @@ class Game {
         }
         let botMove = this.botPlayer.decideMove(this.lastMove, this.board.copyBoard());
 
-        this.board.markMove(botMove, this.botId);
+        this.makeMove(botMove, this.botId);
         if (this.checkIfPlayerWon(this.botId)) {
             this.winner = this.botId;
+            this.clique = this.board.clique;
             //return this.botId; //bot win
         }
 
@@ -138,6 +140,7 @@ class Game {
 
         this.makeMove(botMove, this.whichBotMoves);
         if (this.checkIfPlayerWon(this.whichBotMoves)) {
+            this.clique = this.board.clique;
             this.winner = this.whichBotMoves;
             return this.whichBotMoves; //bot win
         }
@@ -184,7 +187,6 @@ class Game {
 
     makeMove(move, player) {
         // process.stdout.write(player === PLAYER1 ? '-' : '+');
-        console.log(player === PLAYER1 ? '-' : '+')
         this.board.markMove(move, player);
         this.movesHistory.push(move);
         this.moveCount++;

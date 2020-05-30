@@ -37,6 +37,11 @@ class Board {
         this.moveCount++;
     }
 
+    isAlreadyTaken(vertices) {
+        return this.fields[vertices[0]][vertices[1]] !== EMPTY ||
+            this.fields[vertices[1]][vertices[0]] !== EMPTY;
+    }
+
     copyBoard() {
         let newBoard = new Board(this.verticesCount);
 
@@ -74,6 +79,7 @@ class Board {
 
     _addToClique(size, player, verticesSet, nextVertexIndex, possibleVertices) {
         if (verticesSet.size === size) {
+            this.clique = new Set(verticesSet); 
             return true;
         }
 

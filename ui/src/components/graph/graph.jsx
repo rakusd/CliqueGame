@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from 'react';
-import ReactDOM from 'react-dom';
 import { createEmptyGraph } from '../../services/graph-creator-service';
 import CytoscapeComponent from 'react-cytoscapejs';
 const { Game } = require('../../../../game/Game.js');
@@ -7,11 +6,18 @@ const { Game } = require('../../../../game/Game.js');
 const WIDTH = 600;
 const HEIGHT = 600;
 const R = 200;
-export function Graph({ elements, onEdgeTap, onNodeTap, onTap }) {
+export function Graph({ elements, onEdgeTap, onNodeTap, onTap, unselectify }) {
     let cytoscapeRef = useRef(null);
 
     useEffect(() => {
         if (cytoscapeRef) {
+            cytoscapeRef.autounselectify(unselectify);
+        }
+    }, [unselectify])
+
+    useEffect(() => {
+        if (cytoscapeRef) {
+            cytoscapeRef.boxSelectionEnabled(false);
             cytoscapeRef.on('tap', 'edge', event => onEdgeTap(event));
             cytoscapeRef.on('tap', 'node', (event) => {
                 const edgeCreated = onNodeTap(event);
@@ -37,7 +43,8 @@ export function Graph({ elements, onEdgeTap, onNodeTap, onTap }) {
                 {
                     selector: 'edge',
                     style: {
-                        lineColor: "data(edgeColor)"
+                        lineColor: "data(edgeColor)",
+                        width: "data(width)"
                     }
                 }
             ]}>
