@@ -11,6 +11,7 @@ const R = 200;
 let game = new Game();
 let v1 = -1;
 let player = PLAYER1;
+let cancel = false;
 
 
 const promiseMove = (game) => {
@@ -76,7 +77,7 @@ export function GameBoard({ gameConfig, cancelGame }) {
     }
 
     const botVsBotGame = async (game) => {
-        while (true) {
+        while (!cancel) {
             const move = await promiseMove(game);
             if (typeof (move) === 'number') {
                 if (move === 0) {
@@ -155,12 +156,16 @@ export function GameBoard({ gameConfig, cancelGame }) {
         }
     };
 
-    const close = () => cancelGame();
+    const close = () => {
+        cancel = true;
+        cancelGame();
+    }
 
     useEffect(() => {
         if (!gameConfig) {
             return;
         }
+        cancel = false;
         game.initGame(gameConfig);
         setElements(createEmptyGraph(gameConfig.verticesCount, WIDTH / 2, HEIGHT / 2, R));
 
