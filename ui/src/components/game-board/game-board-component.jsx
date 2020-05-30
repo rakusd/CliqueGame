@@ -36,13 +36,7 @@ export function GameBoard({ gameConfig, cancelGame }) {
             v1 = -1;
         }
     }
-    const edgeExist = (elems, v1, v2) => {
-        const inx = elems.findIndex(e =>
-            e.group === 'edges' &&
-            ((e.data.source == v1 && e.data.target == v2) ||
-                (e.data.source == v2 && e.data.target == v1)));
-        return inx !== -1;
-    }
+
     const colorForPlayer = (id) => id === PLAYER1 ? 'red' : 'blue';
 
 
@@ -73,6 +67,7 @@ export function GameBoard({ gameConfig, cancelGame }) {
         game = new Game();
         v1 = -1;
         player = PLAYER1;
+        cancel = true;
         cancelGame();
     }
 
@@ -155,11 +150,6 @@ export function GameBoard({ gameConfig, cancelGame }) {
             return true;
         }
     };
-
-    const close = () => {
-        cancel = true;
-        cancelGame();
-    }
 
     useEffect(() => {
         if (!gameConfig) {
